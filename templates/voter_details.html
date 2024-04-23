@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Voter Details</h2>
+    <ul>
+        {% for key, value in voter_details.items() %}
+        <li><strong>{{ key }}:</strong> {{ value }}</li>
+        {% endfor %}
+    </ul>
+    <form id="candidate-choice-form" method="post">
+        <input type="hidden" name="voter_id" value="{{ voter_details['Voter ID'] }}">
+        <label for="candidate_choice">Choose the candidate you want to vote for:</label>
+        <select id="candidate_choice" name="candidate_choice" required>
+            {% for candidate in candidates %}
+            <option value="{{ candidate }}">{{ candidate }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" id="confirm-vote-btn">Confirm Vote</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const confirmVoteBtn = document.getElementById('confirm-vote-btn');
+    const form = document.getElementById('candidate-choice-form');
+
+    confirmVoteBtn.addEventListener('click', () => {
+        const candidateChoice = document.getElementById('candidate_choice').value;
+        const confirmed = confirm(`Are you sure you want to cast a vote for ${candidateChoice}?`);
+
+        if (confirmed) {
+            form.submit();
+        }
+    });
+</script>
+{% endblock %}

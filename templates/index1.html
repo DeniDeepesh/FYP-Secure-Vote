@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Welcome to Secure Vote!</h2>
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+    <form id="voter-id-form" method="post">
+        <label for="voter_id">Enter your voter ID:</label>
+        <input type="text" id="voter_id" name="voter_id" required>
+        <button type="submit">Proceed</button>
+    </form>
+</div>
+{% endblock %}

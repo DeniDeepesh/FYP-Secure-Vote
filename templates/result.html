@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Voting Result</h2>
+    <p>{{ result }}</p>
+    <form id="new-voter-form" method="post" action="{{ url_for('result') }}">
+        <label for="new_voter">Enter a new voter?</label>
+        <select name="new_voter" id="new_voter">
+            <option value="yes">Yes</option>
+            <option value="no" selected>No</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const newVoterForm = document.getElementById('new-voter-form');
+    newVoterForm.addEventListener('submit', (event) => {
+        const newVoterSelect = document.getElementById('new_voter');
+        if (newVoterSelect.value === 'no') {
+            // Redirect to the winner_result.html page
+            window.location.href = "{{ url_for('winner_result') }}";
+        }
+    });
+</script>
+{% endblock %}

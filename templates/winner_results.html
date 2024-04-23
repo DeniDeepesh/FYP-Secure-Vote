@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Election Results</h2>
+    <ul>
+        {% for candidate, vote_count in votes.items() %}
+        <li>{{ candidate }}: {{ vote_count }} votes</li>
+        {% endfor %}
+    </ul>
+    <h3>{{ result_message }}</h3>
+</div>
+{% endblock %}

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voter Registration</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background-color: #ddd;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            color: #666;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-group button {
+            background-color: #008CBA; /* Blue */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 20px;
+            cursor: pointer;
+        }
+        .address-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 15px;
+        }
+        #response {
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>SECURE VOTE</h1>
+        <h1>Voter Registration</h1>
+        <form id="registration-form">
+            <div class="form-group">
+                <label for="first-name">First Name:</label>
+                <input type="text" id="first-name" name="first_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="middle-name">Middle Name:</label>
+                <input type="text" id="middle-name" name="middle_name">
+            </div>
+
+            <div class="form-group">
+                <label for="last-name">Last Name:</label>
+                <input type="text" id="last-name" name="last_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="citizenship-number">Citizenship Number:</label>
+                <input type="number" id="citizenship-number" name="citizenship_number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="voter-id">Voter ID:</label>
+                <input type="number" id="voter-id" name="voter_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone-number">Phone Number:</label>
+                <input type="tel" id="phone-number" name="phone_number" required>
+            </div>
+
+            <div class="form-group">
+                <h2>Address</h2>
+                <div class="address-group">
+                    <div>
+                        <label for="district">District:</label>
+                        <input type="text" id="district" name="district" required>
+                    </div>
+                    <div>
+                        <label for="city">City:</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                    <div>
+                        <label for="municipality">Municipality:</label>
+                        <input type="text" id="municipality" name="municipality" required>
+                    </div>
+                    <div>
+                        <label for="ward-no">Ward No.:</label>
+                        <input type="number" id="ward-no" name="ward_no" required>
+                    </div>
+                    <div>
+                        <label for="tole">Tole:</label>
+                        <input type="text" id="tole" name="tole" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <video id="video" width="240" height="180" autoplay></video>
+                <button type="button" id="snap">Snap Photo</button>
+                <canvas id="canvas" width="240" height="180"></canvas>
+            </div>
+
+            <div class="form-group">
+                <button type="submit">Register</button>
+            </div>
+        </form>
+
+        <div id="response"></div>
+    </div>
+
+    <script>
+        // Get the video, canvas, and snap elements
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var snap = document.getElementById('snap');
+
+        // Get access to the webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                // Display the live video feed in the video element
+                video.srcObject = stream;
+            })
+            .catch(function(err) {
+                console.log("An error occurred: " + err);
+            });
+
+        // When the "Snap Photo" button is clicked, capture a frame and draw it on the canvas
+        snap.addEventListener("click", function() {
+            var context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 300, 180);
+        });
+
+        $(document).ready(function() {
+            $('#registration-form').validate({
+                rules: {
+                    first_name: {
+                        required: true,
+                        minlength: 2,
+                        lettersonly: true
+                    },
+                    middle_name: {
+                        minlength: 2,
+                        lettersonly: true
+                    },
+                    last_name: {
+                        required: true,
+                        minlength: 2,
+                        lettersonly: true
+                    },
+                    citizenship_number: {
+                        required: true,
+                        number: true,
+                        minlength: 5,
+                        maxlength: 5
+                    },
+                    voter_id: {
+                        required: true,
+                        number: true,
+                        minlength: 5,
+                        maxlength: 5
+                    },
+                    phone_number: {
+                        required: true,
+                        number: true,
+                        minlength: 10,
+                        maxlength: 10
+                    },
+                    address: {
+                        required: true
+                    }
+                },
+                messages: {
+                    first_name: {
+                        required: "Please enter your first name",
+                        minlength: "Your first name must consist of at least 2 characters",
+                        lettersonly: "Your first name should only contain letters"
+                    },
+                    first_name: {
+                        minlength: "Your middle name must consist of at least 2 characters",
+                        lettersonly: "Your middle name should only contain letters"
+                    },
+                    last_name: {
+                        required: "Please enter your last name",
+                        minlength: "Your last name must consist of at least 2 characters",
+                        lettersonly: "Your last name should only contain letters"
+                    },
+                    citizenship_number: {
+                        required: "Please enter your citizenship number",
+                        number: "Please enter a valid number",
+                        minlength: "Your citizenship number must consist of exactly 5 digits",
+                        maxlength: "Your citizenship number must consist of exactly 5 digits"
+                    },
+                    voter_id: {
+                        required: "Please enter your voter ID",
+                        number: "Please enter a valid number",
+                        minlength: "Your voter ID must consist of exactly 5 digits",
+                        maxlength: "Your voter ID must consist of exactly 5 digits"
+                    },
+                    phone_number: {
+                        required: "Please enter your phone number",
+                        number: "Please enter a valid number",
+                        minlength: "Your phone number must consist of exactly 10 digits",
+                        maxlength: "Your phone number must consist of exactly 10 digits"
+                    },
+                    address: {
+                        required: "Please enter your address"
+                    }
+                },
+                submitHandler: function(form) {
+                    event.preventDefault();
+                    var canvasData = canvas.toDataURL('image/png');
+                    var formData = $(form).serialize() + '&image=' + encodeURIComponent(canvasData);
+                    $.ajax({
+                        type: 'POST',
+                        url: '/register',
+                        data: formData,
+                        success: function(response) {
+                            if (response.error) {
+                                $('#response').html('<p class="alert alert-danger">' + response.error + '</p>');
+                            } else {
+                                $('#response').html('<p class="alert alert-success">' + response.message + '</p>');
+                                $('#registration-form')[0].reset();
+                                var context = canvas.getContext('2d');
+                                context.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            $('#response').html('<p class="alert alert-danger">An error occurred: ' + error + '</p>');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
